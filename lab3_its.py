@@ -5,6 +5,7 @@ kappa = 1
 time_model = 24
 
 time_event_last = 0
+time_serv_sum = 0
 n_rej = 0
 n_serv = 0
 
@@ -20,6 +21,8 @@ while time_event_last < time_model:
     time_event.append(time_event_last)
 
 for i in time_event:
+    serv = gen_rnd(kappa)
+    time_serv_sum += serv
     time_serv.append(gen_rnd(kappa))
 
 for i in range(0, len(time_event) - 2):
@@ -30,14 +33,14 @@ for i in range(0, len(time_event) - 2):
     else:
         n_rej += 1
 
-print(f' 1) Вероятность обслуживания = {n_serv/len(time_event)}')
-print(f' 2) Вероятность отказа = {n_rej/len(time_event)}')
-print(f' 3) Пропускная способность = {n_serv/time_model}')
-
+print(f' 1) Вероятность обслуживания = {round(n_serv/len(time_event), 3)}')
+print(f' 2) Вероятность отказа = {round(n_rej/len(time_event), 3)}')
+print(f' 3) Пропускная способность = {round(n_serv/time_model, 3)}')
 # print(f' 4) Среднее количество занятых каналов = {}')
 # print(f' 5) Вероятность простоя всей системы = {}')
 # print(f' 6) Среднее количество заявок в очереди = {}')
 # print(f' 7) Среднее время ожидания заявки в очереди = {}')
-# print(f' 8) Среднее время обслуживания заявки = {}')
+print(f' 8) Среднее время обслуживания заявки = {round(time_serv_sum/len(time_event), 3)}')
 # print(f' 9) Среднее время нахождения заявки в системе = {}')
 # print(f' 10) Среднее количество заявок в системе = {}')
+
