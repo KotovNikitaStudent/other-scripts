@@ -1,51 +1,43 @@
 import numpy as np
-import random
-# from _thread import start_new_thread
+import random as rnd
 
-alpha1 = 5
-modeling_time = 24*60
+kappa = 1
+time_model = 24
 
-# генерация события прихода заявки
+time_event_last = 0
+n_rej = 0
+n_serv = 0
+
 time_event = []
-last_time_event = 0
-for time in range(0, modeling_time - 1):
-    x = random.random()
-    rnd = alpha1 - alpha1 * np.sqrt(1 - x)
-    last_time_event += rnd
-    time_event.append(last_time_event)
-time_event.sort()
+time_serv = []
+time_last_end = []
 
-# генерация времи обслуживания запроса
-serv_time = []
-for time in time_event:
-    # x = random.random() # случайное время обслуживания
-    # rnd = alpha1 - alpha1 * np.sqrt(1 - x)
-    rnd = 1 # фиксированное время обслуживания
-    serv_time.append(rnd)
+def gen_rnd(kappa):
+    return kappa*(1 - np.sqrt(1 - rnd.random()))
 
-reject_serv = 0
-take_serv = 0
+while time_event_last < time_model:
+    time_event_last += gen_rnd(kappa)
+    time_event.append(time_event_last)
 
-# генерация времени простоя в случайный момент времи
-# + генерация вероятностей отказа и обслуживания
-i = random.randint(1, 100)
-for time in range(0, len(time_event) - 2):
-    count = random.randint(1, 100)
-    if i < (len(time_event)):
-        time_event[i] += 10
-        time_end = time_event[time] + serv_time[time]
-        i += count
+for i in time_event:
+    time_serv.append(gen_rnd(kappa))
+
+for i in range(0, len(time_event) - 2):
+    time_end = time_event[i] + time_serv[i]
+    time_last_end.append(time_end)
+    if time_event[i + 1] < time_end:
+        n_serv += 1
     else:
-        time_end = time_event[time] + serv_time[time]
-    if time_event[time + 1] < time_end:
-        reject_serv += 1
-    else:
-        take_serv += 1
+        n_rej += 1
 
-reject_prob = reject_serv/len(time_event)
-take_prob = take_serv/len(time_event)
-throughput = take_serv/modeling_time
-print(f'Вероятность отказа = {reject_prob}')
-print(f'Вероятность обслуживания = {take_prob}')
-print(f'Пропусканя способность = {throughput}')
+print(f' 1) Вероятность обслуживания = {n_serv/len(time_event)}')
+print(f' 2) Вероятность отказа = {n_rej/len(time_event)}')
+print(f' 3) Пропускная способность = {n_serv/time_model}')
 
+# print(f' 4) Среднее количество занятых каналов = {}')
+# print(f' 5) Вероятность простоя всей системы = {}')
+# print(f' 6) Среднее количество заявок в очереди = {}')
+# print(f' 7) Среднее время ожидания заявки в очереди = {}')
+# print(f' 8) Среднее время обслуживания заявки = {}')
+# print(f' 9) Среднее время нахождения заявки в системе = {}')
+# print(f' 10) Среднее количество заявок в системе = {}')
