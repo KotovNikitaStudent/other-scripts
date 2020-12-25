@@ -91,7 +91,7 @@ def gen_rnd(kappa):
         pos += 1
         return i
     else:
-        return 100
+        return 1000
 
 current_time = 0
 push_event(1, gen_rnd(kappa), -1, 0)
