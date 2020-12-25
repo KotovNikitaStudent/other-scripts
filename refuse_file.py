@@ -3,10 +3,10 @@ import random as rnd
 import matplotlib.pyplot as plt
 
 kappa = 1
-time_model = 5
-len_queue = 2
+time_model = 1
+len_queue = 1
 time_event_last = 0
-num_channel = 2
+num_channel = 1
 
 time_serv_sum = 0
 time_pr = 0
@@ -50,16 +50,19 @@ class Statistics:
         self.avr_time_task = TAvarege()
         self.avr_task_in_sistem = TAvarege()
         self.avr_len_task = TAvarege()
+        self.avr_time_in_serv = TAvarege()
+        self.avr_time_eq_in_system = TAvarege()
+
     def print(self):
-        print(f' 1) Вероятность обслуживания = {self.n_serv/(self.n_serv + self.n_rej)} [%]')
-        print(f' 2) Вероятность отказа = {self.n_rej/(self.n_serv + self.n_rej)} [%]')
-        # print(f' 3) Пропускная способность = {round(n_serv/time_model, 3)} [шт/час]')
-        # print(f' 4) Среднее количество занятых каналов = {round(num_channel*time_serv_sum/time_model, 3)}')
-        print(f' 5) Вероятность простоя всей системы = {self.time_free/time_model} [%]')
+        print(f' 1) Вероятность обслуживания = {self.n_serv/(self.n_serv + self.n_rej)}')
+        print(f' 2) Вероятность отказа = {self.n_rej/(self.n_serv + self.n_rej)}')
+        print(f' 3) Пропускная способность = {self.n_serv/time_model}')
+        # print(f' 4) Среднее количество занятых каналов = {}')
+        print(f' 5) Вероятность простоя всей системы = {self.time_free/time_model}')
         print(f' 6) Среднее количество заявок в очереди = {self.avr_n_len.get()}')
-        # print(f' 7) Среднее время ожидания заявки в очереди = {round(time_in_queue/n_queue, 3)} [час]')
-        # print(f' 8) Среднее время обслуживания заявки = {round(time_serv_sum/len(time_event), 3)} [час]')
-        # print(f' 9) Среднее время нахождения заявки в системе = {round(time_in_queue/n_queue + time_serv_sum/len(time_event), 3)} [час]')
+        # print(f' 7) Среднее время ожидания заявки в очереди = {}')
+        # print(f' 8) Среднее время обслуживания заявки = {}')
+        # print(f' 9) Среднее время нахождения заявки в системе = {}')
         # print(f' 10) Среднее количество заявок в системе = {}')
 
 class TThread:
@@ -78,8 +81,17 @@ def push_event(id,label,thread_id, time_started):
 			return
 	time_event.append(t)
 
+test_arr = [1]
+pos = 0
 def gen_rnd(kappa):
-    return kappa*(1 - np.sqrt(1 - rnd.random()))
+    # return kappa*(1 - np.sqrt(1 - rnd.random()))
+    global pos, test_arr
+    if pos < len(test_arr):
+        i = test_arr[pos]
+        pos += 1
+        return i
+    else:
+        return 100
 
 current_time = 0
 push_event(1, gen_rnd(kappa), -1, 0)
@@ -96,21 +108,22 @@ while current_time < time_model:
         if len(q) < len_queue:
             q.append(current)
             stat.n_serv += 1
-            # print('task queued')
+            print('task queued')
         else:
             stat.n_rej += 1
-            # print('task NOT queued')
+            print('task NOT queued')
     if current.id == 2:
         thread[current.thread_id].label_thread = -1
-        # print('thread end')
+        print('thread end')
         stat.avr_time_task.append(current_time - current.time_started)
     for i in range(0, len(thread)):
         if thread[i].label_thread == -1:
             if len(q) > 0:
                 thread[i].label_thread = current.label
+                stat.avr_time_in_serv.append(current_time - current.time_started)
                 push_event(2, current.label + thread[i].power, i, current_time)
                 q.pop(0)
-                # print(' task threaded')
+                print('task threaded')
                 break
     len_time = time_event[0].label - current_time
     thread_free = 0
@@ -124,11 +137,9 @@ while current_time < time_model:
     current_time = time_event[0].label
 
 stat.print()
-#
-# # plt.scatter(time_event, ones_event)
-# # plt.scatter(time_last_end, ones_end)
-# # plt.xlim([0, 2])
-# # plt.grid(True)
-# # plt.show()
-# #
 
+# plt.scatter(time_event, ones_event)
+# plt.scatter(time_last_end, ones_end)
+# plt.xlim([0, 2])
+# plt.grid(True)
+# plt.show()
