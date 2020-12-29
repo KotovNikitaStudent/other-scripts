@@ -229,7 +229,7 @@ num_channels_7 = [1, 1.33, 1.68, 2, 2.25]
 num_channels_8 = [1.9, 2.53, 3.13, 3.59, 3.71]
 num_channels_9 = [2.9, 3.85, 4.85, 5.66, 6.72]
 
-fig, ax = plt.subplots(ncols=5, figsize=(17, 2.5))
+fig, ax = plt.subplots(ncols=5, figsize=(20, 4))
 ax = ax.ravel()
 ax[0] = plt.subplot(1, 5, 1)
 ax[0].set_title('Интенсивности источника')
@@ -252,6 +252,11 @@ ax[1].plot(ras_power_channel, lambda_0, ras_power_channel, lambda_1, ras_power_c
 ax[2].plot(ras_len_queue, length_queue_0, ras_len_queue, length_queue_1, ras_len_queue, length_queue_2, ras_len_queue, length_queue_3, ras_len_queue, length_queue_4, ras_len_queue, length_queue_5, ras_len_queue, length_queue_6, ras_len_queue, length_queue_7, ras_len_queue, length_queue_8, ras_len_queue, length_queue_9)
 ax[3].plot(ras_time_model, time_model_0, ras_time_model, time_model_1, ras_time_model, time_model_2, ras_time_model, time_model_3, ras_time_model, time_model_4, ras_time_model, time_model_5, ras_time_model, time_model_6, ras_time_model, time_model_7, ras_time_model, time_model_8, ras_time_model, time_model_9)
 ax[4].plot(ras_num_channel, num_channels_0, ras_num_channel, num_channels_1, ras_num_channel, num_channels_2, ras_num_channel, num_channels_3, ras_num_channel, num_channels_4, ras_num_channel, num_channels_5, ras_num_channel, num_channels_6, ras_num_channel, num_channels_7, ras_num_channel, num_channels_8, ras_num_channel, num_channels_9)
+ax[0].legend(('1', '2', '3', '4', '5', '6', '7', '8', '9', '10'), loc='center right', ncol=2)
+ax[1].legend(('1', '2', '3', '4', '5', '6', '7', '8', '9', '10'), loc='center right', ncol=2)
+ax[2].legend(('1', '2', '3', '4', '5', '6', '7', '8', '9', '10'), loc='center right', ncol=2)
+ax[3].legend(('1', '2', '3', '4', '5', '6', '7', '8', '9', '10'), loc='center right', ncol=2)
+ax[4].legend(('1', '2', '3', '4', '5', '6', '7', '8', '9', '10'), loc='center right', ncol=2)
 
 plt.figure(2)
 val_serv = []
