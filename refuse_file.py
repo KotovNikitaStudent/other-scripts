@@ -52,7 +52,7 @@ class Statistics:
 		self.avr_eq_in_system = TAvarege()
 		self.avr_len_task = 0
 		self.avr_time_in_serv = TAvarege()
-		self.avr_time_eq_in_system = TAvarege()
+		self.avr_time_eq_in_system = 0
 
 	def print(self):
 		print(' 1) Вероятность обслуживания = ' + str(self.n_serv/(self.n_serv + self.n_rej)))
@@ -64,7 +64,7 @@ class Statistics:
 		print(' 7) Среднее время ожидания заявки в очереди = ' + str(self.avr_time_task.get()))
 		print(' 8) Среднее время обслуживания заявки = ' + str(self.avr_time_in_serv.get()))
 		print(' 9) Среднее время нахождения заявки в системе = ' + str(self.avr_time_task.get() + self.avr_time_in_serv.get()))
-		print(' 10) Среднее количество заявок в системе = ' + str(time_model/(self.n_serv + self.n_rej)))
+		print(' 10) Среднее количество заявок в системе = ' + str(self.avr_time_eq_in_system/time_model))
 
 class TThread:
 	def __init__(self, _label_thread, _power):
@@ -123,16 +123,17 @@ while current_time < time_model:
 			# print('task NOT queued')
 	if current.id == 2:
 		thread[current.thread_id].label_thread = -1
-	for t in thread:
-		if t.label_thread == -1:
+	for i in range(0, len(thread)):
+	# for t in thread:
+		if thread[i].label_thread == -1:
 			if len(q) > 0:
-				t.label_thread = current.label
-				stat.avr_time_in_serv.append(t.power)
+				thread[i].label_thread = current.label
+				stat.avr_time_in_serv.append(thread[i].power)
 				print("Task started at " + str(current_time) + " planned = " + str(current.time_started))
 				stat.avr_time_task.append(current_time - current.time_started)
-				push_event(2, current.label + t.power, i, current_time)
+				push_event(2, current.label + thread[i].power, i, current_time)
 				q.pop(0)
-				print('task threaded ' + str(t.label_thread) + " threads = " + str(countRunningThreads()))
+				print('task threaded ' + str(thread[i].label_thread) + " threads = " + str(countRunningThreads()))
 				break
 	if time_event[0].label > time_model:
 		break
@@ -145,6 +146,7 @@ while current_time < time_model:
 		stat.time_running += len_time
 	stat.avr_len_task += runningThreads * len_time
 	current_time = time_event[0].label
+	stat.avr_time_eq_in_system += len_time*(len_queue+runningThreads)
 
 stat.print()
 # plt.scatter(time_event, ones_event)
