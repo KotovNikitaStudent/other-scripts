@@ -121,13 +121,14 @@ serv_qt_plt = []
 rej_qt_plt = []
 thread_label_plt = []
 
+time_event_plt.append(current_time)
 stat = Statistics(num_channel)
 while current_time < time_model:
 	current = time_event.pop(0)
 	if current.id == 1:
 		push_event(1, current_time + gen_rnd(kappa), -1, current_time)
 		time_event_plt.append(current_time + gen_rnd(kappa))
-		ones_time_event_plt.append(1)
+		# ones_time_event_plt.append(1)
 		if len(q) < len_queue:
 			q.append(current)
 			serv_qt_plt.append(current_time)
@@ -149,7 +150,8 @@ while current_time < time_model:
 				# print("Task started at " + str(current_time) + " planned = " + str(current.time_started))
 				stat.avr_time_task.append(current_time - current.time_started)
 				push_event(2, current.label + thread[i].power, i, current_time)
-				thread_label_plt.append(current.label + thread[i].power)
+				# thread_label_plt.append(current.label + thread[i].power)
+				thread_label_plt.append(current.label)
 				q.pop(0)
 				# print('task threaded ' + str(thread[i].label_thread) + " threads = " + str(countRunningThreads()))
 				break
@@ -232,19 +234,29 @@ num_channels_9 = [2.9, 3.85, 4.85, 5.66, 6.72]
 fig, ax = plt.subplots(ncols=5, figsize=(20, 4))
 ax = ax.ravel()
 ax[0] = plt.subplot(1, 5, 1)
-ax[0].set_title('Интенсивности источника')
+# ax[0].set_title('Интенсивности источника')
+ax[0].set_xlabel('Интенсивность источника [усл.ед]')
+ax[0].set_ylabel('Значение измеряемого параметра [%],[шт/ед.вр],[шт],[ед.вр]')
 ax[0].grid(True)
 ax[1] = plt.subplot(1, 5, 2)
-ax[1].set_title('Интенсивности обслуживания')
+# ax[1].set_title('Интенсивности обслуживания')
+ax[1].set_xlabel('Интенсивность обслуживания [усл.ед]')
+ax[1].set_ylabel('Значение измеряемого параметра [%],[шт/ед.вр],[шт],[ед.вр]')
 ax[1].grid(True)
 ax[2] = plt.subplot(1, 5, 3)
-ax[2].set_title('Длины очереди')
+# ax[2].set_title('Длины очереди')
+ax[2].set_xlabel('Длина очереди [шт]')
+ax[2].set_ylabel('Значение измеряемого параметра [%],[шт/ед.вр],[шт],[ед.вр]')
 ax[2].grid(True)
 ax[3] = plt.subplot(1, 5, 4)
-ax[3].set_title('Времени моделирования')
+# ax[3].set_title('Времени моделирования')
+ax[3].set_xlabel('Время моделирования [ед.вр]')
+ax[3].set_ylabel('Значение измеряемого параметра [%],[шт/ед.вр],[шт],[ед.вр]')
 ax[3].grid(True)
 ax[4] = plt.subplot(1, 5, 5)
-ax[4].set_title('Количество каналов')
+# ax[4].set_title('Количество каналов')
+ax[4].set_xlabel('Количество каналов [шт]')
+ax[4].set_ylabel('Значение измеряемого параметра [%],[шт/ед.вр],[шт],[ед.вр]')
 ax[4].grid(True)
 
 ax[0].plot(ras_kappa, kappa_0, ras_kappa, kappa_1,ras_kappa, kappa_2, ras_kappa, kappa_3, ras_kappa, kappa_4, ras_kappa, kappa_5, ras_kappa, kappa_6, ras_kappa, kappa_7, ras_kappa, kappa_8, ras_kappa, kappa_9)
@@ -259,6 +271,8 @@ ax[3].legend(('1', '2', '3', '4', '5', '6', '7', '8', '9', '10'), loc='center ri
 ax[4].legend(('1', '2', '3', '4', '5', '6', '7', '8', '9', '10'), loc='center right', ncol=2)
 
 plt.figure(2)
+for i in range(len(time_event_plt)):
+	ones_time_event_plt.append(1)
 val_serv = []
 for i in range(len(serv_qt_plt)):
 	val_serv.append(2)
@@ -269,6 +283,7 @@ val_thread = []
 for i in range(len(thread_label_plt)):
 	val_thread.append(4)
 plt.scatter(time_event_plt, ones_time_event_plt, label='Заявки')
+plt.vlines(time_event_plt, 1, 4, colors='k', linestyle=':', linewidth=1)
 plt.scatter(serv_qt_plt, val_serv, label='Обслужено')
 plt.scatter(rej_qt_plt, val_rej, label='Отказано')
 plt.scatter(thread_label_plt, val_thread, label='В канале')
@@ -276,7 +291,8 @@ location = ['center right']
 i = 0
 plt.legend(fontsize=10, loc=location[i])
 plt.title('Временные диграммы работы СМО')
-plt.xlabel('Время, сек')
+plt.xlabel('Время, [ед.вр]')
+plt.ylabel('События во времени')
 plt.grid(True)
 plt.show()
 system('pause')
