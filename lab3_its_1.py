@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from os import system
 
 # kappa = 1
-kappa = float(input('\nВведите произодительность источника: '))
+gamma = float(input('\nВведите произодительность источника: '))
 # time_model = 10
 time_model = float(input('Введите время моделирования: '))
 # len_queue = 2
@@ -13,7 +13,7 @@ time_event_last = 0
 # num_channel = 1
 num_channel = int(input('Введите количество каналов: '))
 
-gamma = 5
+kappa = 10
 epsilon = 2/math.log(1 + (gamma ** 2 / kappa ** 2))
 time_serv_sum = 0
 time_pr = 0
@@ -101,7 +101,7 @@ def gen_rnd(kappa):
     return kappa*math.sqrt(math.exp(2*rnd.random()/epsilon) - 1)
 
 current_time = 0
-push_event(1, gen_rnd(kappa), -1, 0)
+push_event(1, gen_rnd(gamma), -1, 0)
 q = []
 thread = []
 # thread_power = [1,1,1,1,1,1,1]
@@ -124,13 +124,14 @@ serv_qt_plt = []
 rej_qt_plt = []
 thread_label_plt = []
 
+time_event_plt.append(current_time)
 stat = Statistics(num_channel)
 while current_time < time_model:
 	current = time_event.pop(0)
 	if current.id == 1:
-		push_event(1, current_time + gen_rnd(kappa), -1, current_time)
-		time_event_plt.append(current_time + gen_rnd(kappa))
-		ones_time_event_plt.append(1)
+		push_event(1, current_time + gen_rnd(gamma), -1, current_time)
+		time_event_plt.append(current_time + gen_rnd(gamma))
+		# ones_time_event_plt.append(1)
 		if len(q) < len_queue:
 			q.append(current)
 			serv_qt_plt.append(current_time)
@@ -152,7 +153,8 @@ while current_time < time_model:
 				# print("Task started at " + str(current_time) + " planned = " + str(current.time_started))
 				stat.avr_time_task.append(current_time - current.time_started)
 				push_event(2, current.label + thread[i].power, i, current_time)
-				thread_label_plt.append(current.label + thread[i].power)
+				# thread_label_plt.append(current.label + thread[i].power)
+				thread_label_plt.append(current.label)
 				q.pop(0)
 				# print('task threaded ' + str(thread[i].label_thread) + " threads = " + str(countRunningThreads()))
 				break
@@ -177,80 +179,89 @@ ras_power_channel = [1, 2, 3, 4, 5]
 ras_len_queue = [1, 2, 3, 4, 5]
 ras_time_model = [5, 10, 15, 20, 24]
 
-kappa_0 = [100, 100, 100, 100, 100]
-kappa_1 = [0, 0, 0, 0, 0]
-kappa_2 = [0.4, 0.2, 0.2, 0.3, 0.2]
-kappa_3 = [0.59, 0.72, 0.65, 0.96, 0.86]
-kappa_4 = [41.2, 27.87, 34.76, 3.96, 14.37]
-kappa_5 = [1.0, 1.0, 1.0, 0.67, 1]
-kappa_6 = [2.16, 3.23, 3.08, 3.2, 3.87]
-kappa_7 = [1, 1, 1, 1, 1]
-kappa_8 = [3.16, 4.23, 4.08, 4.2, 4.78]
-kappa_9 = [2.49, 2.21, 2.08, 2.88, 2.57]
+kappa_0 = [7.95,30.77,63.16,100.0,100.0]
+kappa_1 = [92.05,69.23,36.84,0,0]
+kappa_2 = [1.2,1.2,1.2,1.1,0.8]
+kappa_3 = [0.99,0.99,0.99,0.98,0.86]
+kappa_4 = [0.51,0.61,0.84,2.15,13.96]
+kappa_5 = [0.75,0.75,0.75,0.82,0.88]
+kappa_6 = [0.91,0.94,0.98,1.0,1.27]
+kappa_7 = [1.0,1.0,1.0,1.0,1.0]
+kappa_8 = [1.91,1.94,1.98,2.0,2.27]
+kappa_9 = [2.98,2.98,2.97,2.96,2.96]
 
-lambda_0 = [100, 100, 50, 100, 100]
-lambda_1 = [0, 0, 50, 0, 0]
-lambda_2 = [0.3, 0.4, 0.4, 0.3, 0.3]
-lambda_3 = [0.85, 0.61, 0.98, 0.8, 0.83]
-lambda_4 = [15.39, 38.67, 1.68, 20.4, 17.12]
-lambda_5 = [1.0, 0.5, 0.25, 0, 0.33]
-lambda_6 = [2.49, 2.99, 3.63, 0, 3.13]
-lambda_7 = [1.0, 2.0, 3.0, 4.0, 5.0]
-lambda_8 = [3.49, 4.99, 6.63, 4.0, 8.13]
-lambda_9 = [2.54, 2.56, 2.95, 2.39, 2.49]
+lambda_0 = [8.0,4.73,3.9,3.27,2.72]
+lambda_1 = [92.0,95.27,96.1,96.73,97.28]
+lambda_2 = [1.2,0.7,0.6,0.5,0.4]
+lambda_3 = [0.99,1.0,1.0,1.0,1.0]
+lambda_4 = [0.58,0.45,0.23,0.0,0.29]
+lambda_5 = [0.75,0.57,0.5,0.4,0.25]
+lambda_6 = [0.91,1.6,2.27,2.68,2.54]
+lambda_7 = [1.0,2.0,3.0,4.0,5.0]
+lambda_8 = [1.91,3.6,5.27,6.68,7.54]
+lambda_9 = [2.98,2.99,2.99,3.0,2.99]
 
-length_queue_0 = [100, 100, 100, 100, 100]
-length_queue_1 = [0, 0, 0, 0, 0]
-length_queue_2 = [0.3, 0.2, 0.3, 0.3, 0.3]
-length_queue_3 = [0.8, 0.29, 0.94, 0.71, 0.97]
-length_queue_4 = [19.87, 70.66, 5.61, 29.26, 3.3]
-length_queue_5 = [1.0, 1.0, 1.0, 1.0, 0.67]
-length_queue_6 = [2.69, 1.54, 2.81, 2.02, 3.22]
-length_queue_7 = [1, 1, 1, 1, 1]
-length_queue_8 = [3.69, 2.54, 3.81, 3.02, 4.22]
-length_queue_9 = [1.67, 1.11, 3.78, 3.54, 5.8]
+length_queue_0 = [7.38,7.84,8.72,9.52,9.74]
+length_queue_1 = [92.62,92.16,91.28,90.48,90.26]
+length_queue_2 = [1.1,1.2,1.3,1.4,1.5]
+length_queue_3 = [0.99,0.99,0.99,0.99,1.0]
+length_queue_4 = [0.66,0.77,0.62,0.56,0.25]
+length_queue_5 = [0.82,0.75,0.69,0.64,0.6]
+length_queue_6 = [0.91,0.91,0.91,0.91,0.91]
+length_queue_7 = [1.0,1.0,1.0,1.0,1.0]
+length_queue_8 = [1.91,1.91,1.91,1.91,1.91]
+length_queue_9 = [1.99,2.98,3.98,4.97,5.99]
 
-time_model_0 = [100, 100, 100, 100, 100]
-time_model_1 = [0, 0, 0, 0, 0]
-time_model_2 = [0.2, 0.2, 0.33, 0.35, 0.25]
-time_model_3 = [0.96, 0.35, 0.38, 0.78, 0.38]
-time_model_4 = [3.54, 64.73, 62.07, 21.78, 61.54]
-time_model_5 = [1.0, 1.0, 1.0, 1.0, 1.0]
-time_model_6 = [0, 2.06, 2.89, 2.58, 3.24]
-time_model_7 = [1, 1, 1, 1, 1]
-time_model_8 = [1.0, 3.06, 3.89, 3.58, 4.24]
-time_model_9 = [2.89, 1.38, 2.36, 2.66, 2.06]
+time_model_0 = [9.33,8.0,7.8,7.26,7.05]
+time_model_1 = [90.67,92.0,92.2,92.74,92.95]
+time_model_2 = [1.4,1.2,1.13,1.1,1.08]
+time_model_3 = [0.99,1.0,1.0,1.0,1.0]
+time_model_4 = [1.14,0.09,0.33,0.09,0.08]
+time_model_5 = [0.57,0.75,0.82,0.86,0.88]
+time_model_6 = [0.82,0.91,0.94,0.95,0.96]
+time_model_7 = [1.0,1.0,1.0,1.0,1.0]
+time_model_8 = [1.82,1.91,1.94,1.95,1.96]
+time_model_9 = [2.97,3.0,2.99,3.0,3.0]
 
-num_channels_0 = [100, 100, 100, 100, 100]
-num_channels_1 = [0, 0, 0, 0, 0]
-num_channels_2 = [0.4, 0.2, 2, 0.5, 0.6]
-num_channels_3 = [0.57, 0.29, 2.86, 0.69, 0.79]
-num_channels_4 = [42.59, 71.08, 0.79, 40.48, 40.59]
-num_channels_5 = [1, 0.76, 1.0, 1.0, 0.83]
-num_channels_6 = [1.96, 1.19, 3.23, 1.79, 1.66]
-num_channels_7 = [1, 1.33, 1.0, 1.2, 1.17]
-num_channels_8 = [2.96, 2.53, 4.23, 2.99, 2.82]
-num_channels_9 = [2.03, 3.85, 1.78, 2.68, 2.78]
+num_channels_0 = [8.11,11.33,13.82,16.44,16.88]
+num_channels_1 = [91.89,88.67,86.18,83.56,83.12]
+num_channels_2 = [1.2,1.7,2.1,2.4,2.6]
+num_channels_3 = [0.99,2.0,2.96,3.94,4.91]
+num_channels_4 = [0.67,0.0,0.71,0.33,0.43]
+num_channels_5 = [0.75,0.76,0.76,0.75,0.73]
+num_channels_6 = [0.91,1.14,1.38,1.56,1.64]
+num_channels_7 = [1.0,1.33,1.68,2.0,2.25]
+num_channels_8 = [1.91,2.48,3.06,3.56,3.89]
+num_channels_9 = [2.98,4.0,4.94,5.94,6.9]
 
 fig, ax = plt.subplots(ncols=5, figsize=(20, 4))
 ax = ax.ravel()
 ax[0] = plt.subplot(1, 5, 1)
-ax[0].set_title('Интенсивности источника')
+ax[0].set_xlabel('Интенсивность источника [усл.ед]')
+ax[0].set_ylabel('Значение измеряемого параметра [%],[шт/ед.вр],[шт],[ед.вр]')
 ax[0].grid(True)
 ax[1] = plt.subplot(1, 5, 2)
-ax[1].set_title('Интенсивности обслуживания')
+# ax[1].set_title('Интенсивности обслуживания')
+ax[1].set_xlabel('Интенсивность обслуживания [усл.ед]')
+ax[1].set_ylabel('Значение измеряемого параметра [%],[шт/ед.вр],[шт],[ед.вр]')
 ax[1].grid(True)
 ax[2] = plt.subplot(1, 5, 3)
-ax[2].set_title('Длины очереди')
+# ax[2].set_title('Длины очереди')
+ax[2].set_xlabel('Длина очереди [шт]')
+ax[2].set_ylabel('Значение измеряемого параметра [%],[шт/ед.вр],[шт],[ед.вр]')
 ax[2].grid(True)
 ax[3] = plt.subplot(1, 5, 4)
-ax[3].set_title('Времени моделирования')
+# ax[3].set_title('Времени моделирования')
+ax[3].set_xlabel('Время моделирования [ед.вр]')
+ax[3].set_ylabel('Значение измеряемого параметра [%],[шт/ед.вр],[шт],[ед.вр]')
 ax[3].grid(True)
 ax[4] = plt.subplot(1, 5, 5)
-ax[4].set_title('Количество каналов')
+# ax[4].set_title('Количество каналов')
+ax[4].set_xlabel('Количество каналов [шт]')
+ax[4].set_ylabel('Значение измеряемого параметра [%],[шт/ед.вр],[шт],[ед.вр]')
 ax[4].grid(True)
 
-ax[0].plot(ras_kappa, kappa_0, ras_kappa, kappa_1, ras_kappa, kappa_2, ras_kappa, kappa_3, ras_kappa, kappa_4, ras_kappa, kappa_5, ras_kappa, kappa_6, ras_kappa, kappa_7, ras_kappa, kappa_8, ras_kappa, kappa_9)
+ax[0].plot(ras_kappa, kappa_0, ras_kappa, kappa_1,ras_kappa, kappa_2, ras_kappa, kappa_3, ras_kappa, kappa_4, ras_kappa, kappa_5, ras_kappa, kappa_6, ras_kappa, kappa_7, ras_kappa, kappa_8, ras_kappa, kappa_9)
 ax[1].plot(ras_power_channel, lambda_0, ras_power_channel, lambda_1, ras_power_channel, lambda_2, ras_power_channel, lambda_3, ras_power_channel, lambda_4, ras_power_channel, lambda_5, ras_power_channel, lambda_6, ras_power_channel, lambda_7, ras_power_channel, lambda_8, ras_power_channel, lambda_9)
 ax[2].plot(ras_len_queue, length_queue_0, ras_len_queue, length_queue_1, ras_len_queue, length_queue_2, ras_len_queue, length_queue_3, ras_len_queue, length_queue_4, ras_len_queue, length_queue_5, ras_len_queue, length_queue_6, ras_len_queue, length_queue_7, ras_len_queue, length_queue_8, ras_len_queue, length_queue_9)
 ax[3].plot(ras_time_model, time_model_0, ras_time_model, time_model_1, ras_time_model, time_model_2, ras_time_model, time_model_3, ras_time_model, time_model_4, ras_time_model, time_model_5, ras_time_model, time_model_6, ras_time_model, time_model_7, ras_time_model, time_model_8, ras_time_model, time_model_9)
@@ -262,6 +273,8 @@ ax[3].legend(('1', '2', '3', '4', '5', '6', '7', '8', '9', '10'), loc='center ri
 ax[4].legend(('1', '2', '3', '4', '5', '6', '7', '8', '9', '10'), loc='center right', ncol=2)
 
 plt.figure(2)
+for i in range(len(time_event_plt)):
+	ones_time_event_plt.append(1)
 val_serv = []
 for i in range(len(serv_qt_plt)):
 	val_serv.append(2)
@@ -272,6 +285,7 @@ val_thread = []
 for i in range(len(thread_label_plt)):
 	val_thread.append(4)
 plt.scatter(time_event_plt, ones_time_event_plt, label='Заявки')
+plt.vlines(time_event_plt, 1, 4, colors='k', linestyle=':', linewidth=1)
 plt.scatter(serv_qt_plt, val_serv, label='Обслужено')
 plt.scatter(rej_qt_plt, val_rej, label='Отказано')
 plt.scatter(thread_label_plt, val_thread, label='В канале')
@@ -279,7 +293,8 @@ location = ['center right']
 i = 0
 plt.legend(fontsize=10, loc=location[i])
 plt.title('Временные диграммы работы СМО')
-plt.xlabel('Время, сек')
+plt.xlabel('Время, [ед.вр]')
+plt.ylabel('События во времени')
 plt.grid(True)
 plt.show()
 system('pause')
