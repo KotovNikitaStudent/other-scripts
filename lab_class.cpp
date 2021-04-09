@@ -6,6 +6,10 @@
 #include <algorithm>
 using namespace std;
 
+void DeleteElement(vector<Sport>& list);
+void AddElement(vector<Sport>& list);
+void ChangeElement(vector<Sport>& list);
+
 class Sport
 {
 public:
@@ -90,6 +94,61 @@ Sport::~Sport()
 {
 }
 
+void DeleteElement(vector<Sport>& list)
+{
+	int n;
+	cout << "Enter index of list, to remove n element :";
+	cin >> n;
+	list.erase(list.begin() + n);
+}
+
+void AddElement(vector<Sport>& list)
+{
+	string tempKingOfSport;
+	double tempWorldRecord;
+	int temp_dd, temp_mm, temp_yy;
+	array<int, 3> temp_arr;
+
+	cout << "Enter data in the form: sport << record << record date" << endl;
+	cout << "Enter sport: ";
+	cin >> tempKingOfSport;
+	cout << "Enter record: ";
+	cin >> tempWorldRecord;
+	cout << "Enter record date dd: ";
+	cin >> temp_dd;
+	cout << "Enter record date mm: ";
+	cin >> temp_mm;
+	cout << "Enter record date yy: ";
+	cin >> temp_yy;
+	temp_arr = { temp_dd, temp_mm, temp_yy };
+	list.push_back(Sport(tempKingOfSport, tempWorldRecord, temp_arr));
+}
+
+void ChangeElement(vector<Sport>& list)
+{
+	string tempKingOfSport;
+	double tempWorldRecord;
+	int new_data_index;
+	int temp_dd, temp_mm, temp_yy;
+	array<int, 3> temp_arr;
+
+	cout << "Enter new data in the form: new_data_index << sport << record << record date" << endl;
+	cout << "Enter new_data_index: ";
+	cin >> new_data_index;
+	cout << "Enter new sport: ";
+	cin >> tempKingOfSport;
+	cout << "Enter new record: ";
+	cin >> tempWorldRecord;
+	cout << "Enter new record date dd: ";
+	cin >> temp_dd;
+	cout << "Enter new record date mm: ";
+	cin >> temp_mm;
+	cout << "Enter new record date yy: ";
+	cin >> temp_yy;
+	temp_arr = { temp_dd, temp_mm, temp_yy };
+	list.at(new_data_index) = Sport(tempKingOfSport, tempWorldRecord, temp_arr);
+}
+
 int main()
 {
 	setlocale(LC_ALL, "ru");
@@ -118,84 +177,50 @@ int main()
 		}
 	}
 	
-	// Разблокировать, чтобы выполнить сортировку (SortByKingOfSport) по названию вида спорта 
-	/*
-	Sport sport = Sport();
-	cout << "\nUnsorted" << endl;
-	for (auto &i: list)
+	bool exit = false;
+	int m;
+	while (exit)
 	{
-		cout << i.getInfo() << endl;
+		cout << "Menu:" << endl;
+		cout << "1 - Sort by sport" << endl;
+		cout << "2 - Print information about world record in sport" << endl;
+		cout << "3 - Print information about world record in N month" << endl;
+		cout << "4 - Delete element of list" << endl;
+		cout << "5 - Add element of list" << endl;
+		cout << "6 - Change element of list" << endl;
+		cout << "7 - Exit" << endl << endl;
+		cout << "Select the menu item:";
+		cin >> m;
+		if(m == 1)
+		{ 
+			Sport sport = Sport();
+			cout << "\nUnsorted" << endl;
+			for (auto &i: list)
+			{
+				cout << i.getInfo() << endl;
+			}
+			sport.SortByKingOfSport(list);
+			cout << "\nSorted" << endl;
+			for (auto& i : list)
+			{
+				cout << i.getInfo() << endl;
+			}
+		}
+		if (m == 2)
+		{
+			Sport sport = Sport();
+			sport.PrintWorldRecord(list, "Atlet");
+		}
+		if (m == 3)
+		{
+			Sport sport = Sport();
+			sport.PrintRecordInData(list, 2);
+		}
+		if (m == 4) {DeleteElement(list);}
+		if (m == 5) {AddElement(list);}
+		if (m == 6) {ChangeElement(list);}
+		if (m == 7) {exit = true;}
 	}
-
-	sport.SortByKingOfSport(list);
-
-	cout << "\nSorted" << endl;
-	for (auto& i : list)
-	{
-		cout << i.getInfo() << endl;
-	}*/
-
-	// Разблокировать конструктор без параметров, чтобы исполнить методы PrintRecordInData и PrintWorldRecord
-	/*
-	Sport sport = Sport();
-	sport.PrintRecordInData(list, 2);
-	sport.PrintWorldRecord(list, "Atlet");
-	*/
 	
-	// Разблокировать, чтобы выполнить удаление n-го элемента списка
-	/*
-	int n;
-	cout << "Enter index of list, to remove n element :";
-	cin >> n;
-	list.erase(list.begin() + n);
-	*/
-
-	// Разблокировать, чтобы выполнить добавление элемента в список
-	/*
-	string tempKingOfSport;
-	double tempWorldRecord;
-	int temp_dd, temp_mm, temp_yy;
-	array<int, 3> temp_arr;
-
-	cout << "Enter data in the form: sport << record << record date" << endl;
-	cout << "Enter sport: ";
-	cin >> tempKingOfSport;
-	cout << "Enter record: ";
-	cin >> tempWorldRecord;
-	cout << "Enter record date dd: ";
-	cin >> temp_dd;
-	cout << "Enter record date mm: ";
-	cin >> temp_mm;
-	cout << "Enter record date yy: ";
-	cin >> temp_yy;
-	temp_arr = { temp_dd, temp_mm, temp_yy };
-	list.push_back(Sport(tempKingOfSport, bufWorldRecord, temp_arr));
-	*/
-	
-	// Разблокировать, чтобы выполнить изменение n-го элемента в списке
-	/*
-	string tempKingOfSport;
-	double tempWorldRecord;
-	int new_data_index;
-	int temp_dd, temp_mm, temp_yy;
-	array<int, 3> temp_arr;
-
-	cout << "Enter new data in the form: new_data_index << sport << record << record date" << endl;
-	cout << "Enter new_data_index: ";
-	cin >> new_data_index;
-	cout << "Enter new sport: ";
-	cin >> tempKingOfSport;
-	cout << "Enter new record: ";
-	cin >> tempWorldRecord;
-	cout << "Enter new record date dd: ";
-	cin >> temp_dd;
-	cout << "Enter new record date mm: ";
-	cin >> temp_mm;
-	cout << "Enter new record date yy: ";
-	cin >> temp_yy;
-	temp_arr = { temp_dd, temp_mm, temp_yy };
-	list.at(new_data_index) = Sport(tempKingOfSport, bufWorldRecord, temp_arr);
-	*/
-
 	return 0;
 }
