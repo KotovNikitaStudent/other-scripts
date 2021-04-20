@@ -143,8 +143,3 @@ stat.print()
 # plt.xlim([0, 2])
 # plt.grid(True)
 # plt.show()
-
-print(1)
-print(2)
-print(3)
-
